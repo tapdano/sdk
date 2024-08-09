@@ -19,7 +19,7 @@
     "TapDano"
   ],
   "author": "Lucas Boemeke",
-  "homepage": "https://tapdano.com",
+  "homepage": "https://github.com/tapdano/sdk#readme",
   "license": "MIT",
   "devDependencies": {
     "@types/w3c-web-nfc": "^1.0.4",
@@ -28,5 +28,6 @@
   "dependencies": {
     "buffer": "^6.0.3",
     "tweetnacl": "^1.0.3"
-  }
+  },
+  "files": ["README.md"]
 }
