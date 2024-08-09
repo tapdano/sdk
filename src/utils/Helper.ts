@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer';
 import nacl from 'tweetnacl';
 
 export function hexStringToArrayBuffer(hex: string): Uint8Array {
