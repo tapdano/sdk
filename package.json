@@ -1,6 +1,6 @@
 {
   "name": "tapdano",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TapDano SDK",
   "type": "module",
   "main": "dist/index.js",
@@ -19,6 +19,7 @@
     "TapDano"
   ],
   "author": "Lucas Boemeke",
+  "homepage": "https://tapdano.com",
   "license": "MIT",
   "devDependencies": {
     "@types/w3c-web-nfc": "^1.0.4",
