@@ -1,0 +1,30 @@
+{
+  "name": "tapdano",
+  "version": "1.0.0",
+  "description": "TapDano SDK",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tapdano/sdk.git"
+  },
+  "keywords": [
+    "Cardano",
+    "Ed25519",
+    "NFC",
+    "TapDano"
+  ],
+  "author": "Lucas Boemeke",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/w3c-web-nfc": "^1.0.4",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "tweetnacl": "^1.0.3"
+  }
+}
