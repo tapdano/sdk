@@ -1,6 +1,6 @@
 {
   "name": "tapdano",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "TapDano SDK",
   "type": "module",
   "main": "dist/index.js",
@@ -29,5 +29,7 @@
     "buffer": "^6.0.3",
     "tweetnacl": "^1.0.3"
   },
-  "files": ["README.md"]
+  "files": [
+    "README.md"
+  ]
 }
