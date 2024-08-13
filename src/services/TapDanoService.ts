@@ -2,8 +2,9 @@ import { WebNFCService } from './WebNFCService';
 import { WebAuthnService } from './WebAuthnService';
 import { TagParser } from '../utils/TagParser';
 import { calculatePublicKey, intToHexString } from '../utils/Helper';
+import { MobileNFCService } from './MobileNFCService';
 
-type CommunicationMethod = 'auto' | 'WebNFC' | 'WebAuthn';
+type CommunicationMethod = 'auto' | 'Mobile' | 'WebNFC' | 'WebAuthn';
 
 interface TapDanoServiceConfig {
   method: CommunicationMethod;
@@ -11,14 +12,14 @@ interface TapDanoServiceConfig {
 
 export class TapDanoService {
   private method: CommunicationMethod;
-  private NFCService: WebAuthnService | WebNFCService;
+  private NFCService: MobileNFCService | WebAuthnService | WebNFCService;
 
   constructor(config?: TapDanoServiceConfig) {
     this.method = config?.method || 'auto';
     if (this.method === 'auto') {
-      this.method = 'NDEFReader' in window ? 'WebNFC' : 'WebAuthn';
+      this.method = 'nfc' in window ? 'Mobile' : 'NDEFReader' in window ? 'WebNFC' : 'WebAuthn';
     }
-    this.NFCService = this.method === 'WebNFC' ? new WebNFCService() : new WebAuthnService();
+    this.NFCService = this.method === 'Mobile' ? new MobileNFCService() : this.method === 'WebNFC' ? new WebNFCService() : new WebAuthnService();
   }
 
   async readTag(): Promise<TagParser> {
