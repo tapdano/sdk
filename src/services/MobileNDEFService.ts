@@ -4,7 +4,7 @@ import { TagParser } from "../utils/TagParser";
 declare const nfc: any;
 declare const ndef: any;
 
-export class MobileNFCService {
+export class MobileNDEFService {
   private MAX_TRIES = 10;
   private TRIES = 0;
   private isFirstRead = true;

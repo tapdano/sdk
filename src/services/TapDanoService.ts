@@ -1,10 +1,11 @@
 import { WebNFCService } from './WebNFCService';
 import { WebAuthnService } from './WebAuthnService';
+import { MobileNDEFService } from './MobileNDEFService';
+import { MobileRawService } from './MobileRawService';
 import { TagParser } from '../utils/TagParser';
-import { calculatePublicKey, intToHexString } from '../utils/Helper';
-import { MobileNFCService } from './MobileNFCService';
+import { calculatePublicKey, getPlatform, intToHexString } from '../utils/Helper';
 
-type CommunicationMethod = 'auto' | 'Mobile' | 'WebNFC' | 'WebAuthn';
+type CommunicationMethod = 'auto' | 'MobileNDEF' | 'MobileRaw' | 'WebNFC' | 'WebAuthn';
 
 interface TapDanoServiceConfig {
   method: CommunicationMethod;
@@ -12,14 +13,32 @@ interface TapDanoServiceConfig {
 
 export class TapDanoService {
   private method: CommunicationMethod;
-  private NFCService: MobileNFCService | WebAuthnService | WebNFCService;
+  private NFCService: MobileNDEFService | MobileRawService | WebAuthnService | WebNFCService;
 
   constructor(config?: TapDanoServiceConfig) {
     this.method = config?.method || 'auto';
     if (this.method === 'auto') {
-      this.method = 'nfc' in window ? 'Mobile' : 'NDEFReader' in window ? 'WebNFC' : 'WebAuthn';
+      if ('nfc' in window) {
+        if (getPlatform() == 'Android') {
+          this.method = 'MobileRaw';
+        } else {
+          this.method = 'MobileNDEF';
+        }
+      } else if ('NDEFReader' in window) {
+        this.method = 'WebNFC';
+      } else {
+        this.method = 'WebAuthn';
+      }
     }
-    this.NFCService = this.method === 'Mobile' ? new MobileNFCService() : this.method === 'WebNFC' ? new WebNFCService() : new WebAuthnService();
+    if (this.method === 'MobileNDEF') {
+      this.NFCService = new MobileNDEFService();
+    } else if (this.method === 'MobileRaw') {
+      this.NFCService = new MobileRawService();
+    } else if (this.method === 'WebNFC') {
+      this.NFCService = new WebNFCService();
+    } else {
+      this.NFCService = new WebAuthnService();
+    }
   }
 
   async readTag(): Promise<TagParser> {
