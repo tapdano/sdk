@@ -25,7 +25,7 @@ export class MobileNFCService {
         this.TRIES = 0;
         this.startScan();
       } catch (error) {
-        console.error('executeCommand error');
+        console.error('executeCommand error ');
         console.error(error);
         this.stopScan();
         reject(error);
