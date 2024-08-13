@@ -5,6 +5,16 @@ export function hexStringToArrayBuffer(hex: string): Uint8Array {
   return new Uint8Array(hex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
 }
 
+export function hexStringToArray(hex: string) {
+  //@ts-ignore
+  const tmpArray = new Uint8Array(hex.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+  const result = [];
+  for (let i = 0; i < tmpArray.length; i++) {
+    result.push(tmpArray[i]);
+  }
+  return result;
+};
+
 export function arrayBufferToHex(arrayBuffer: ArrayBuffer): string {
   return Array.from(new Uint8Array(arrayBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 }

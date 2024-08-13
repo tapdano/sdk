@@ -1,4 +1,4 @@
-import { arrayBufferToHex, hexStringToArrayBuffer } from "../utils/Helper";
+import { arrayBufferToHex, hexStringToArray, hexStringToArrayBuffer } from "../utils/Helper";
 import { TagParser } from "../utils/TagParser";
 
 declare const nfc: any;
@@ -37,7 +37,7 @@ export class MobileNFCService {
     try {
       if (this.isFirstRead) {
         const message = [
-          ndef.record(ndef.TNF_MIME_MEDIA, "application/octet-stream", [], nfc.stringToBytes(this._command as string))
+          ndef.record(ndef.TNF_UNKNOWN, [], [], hexStringToArray(this._command as string))
         ];
         nfc.write(message, () => console.log('NFC write successful'), (err: any) => console.error('NFC write failed', err));
         if (this.isCanceled) return;
