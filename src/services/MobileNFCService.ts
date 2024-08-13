@@ -7,6 +7,7 @@ declare const ndef: any;
 export class MobileNFCService {
   private MAX_TRIES = 10;
   private TRIES = 0;
+  private isFirstRead = true;
   private _command: string | undefined;
   private _resolve: ((value: TagParser | PromiseLike<TagParser>) => void) | undefined = undefined;
   private _reject: ((reason?: any) => void) | undefined = undefined;
@@ -20,9 +21,12 @@ export class MobileNFCService {
         this._reject = reject;
         this.isCanceled = false;
         this._command = command;
+        this.isFirstRead = (command != undefined);
         this.TRIES = 0;
         this.startScan();
       } catch (error) {
+        console.error('executeCommand error');
+        console.error(error);
         this.stopScan();
         reject(error);
       }
@@ -31,13 +35,14 @@ export class MobileNFCService {
 
   private ndefListener = (nfcEvent: any) => {
     try {
-      if (this._command && this.TRIES === 0) {
+      if (this.isFirstRead) {
         const message = [
-          ndef.record(ndef.TNF_MIME_MEDIA, "application/octet-stream", [], hexStringToArrayBuffer(this._command))
+          ndef.record(ndef.TNF_MIME_MEDIA, "application/octet-stream", [], hexStringToArrayBuffer(this._command as string))
         ];
         nfc.write(message, () => console.log('NFC write successful'), (err: any) => console.error('NFC write failed', err));
-        this._command = undefined;
-        this.TRIES++;
+        if (this.isCanceled) return;
+        this.isFirstRead = false;
+        this.startScan();
         return;
       }
 
@@ -51,6 +56,8 @@ export class MobileNFCService {
       this.stopScan();
       this._resolve && this._resolve(new TagParser(readContent));
     } catch (error) {
+      console.error('ndefListener error');
+      console.error(error);
       if (this.isCanceled) return;
       this.TRIES++;
       if (this.TRIES >= this.MAX_TRIES) {
