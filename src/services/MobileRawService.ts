@@ -5,6 +5,7 @@ declare const nfc: any;
 declare const ndef: any;
 
 export class MobileRawService {
+  private ApplicationID = '54617044616E6F01';
   private MAX_TRIES = 10;
   private TRIES = 0;
   private _command: string | undefined;
@@ -12,7 +13,7 @@ export class MobileRawService {
   private _reject: ((reason?: any) => void) | undefined = undefined;
   private isCanceled = false;
 
-  async executeCommand(command: string = '0000'): Promise<TagParser> {
+  async executeCommand(command: string = '00A00000'): Promise<TagParser> {
     return new Promise<TagParser>(async (resolve, reject) => {
       try {
         this._resolve = resolve;
@@ -32,17 +33,12 @@ export class MobileRawService {
     try {
       await nfc.connect('android.nfc.tech.IsoDep');
       let response = null;
-      response = arrayBufferToHex(await nfc.transceive('00A404000854617044616E6F0100'));
-      console.log('response', response);
+      response = arrayBufferToHex(await nfc.transceive('00A4040008' + this.ApplicationID + '00'));
       if (response != '9000') {
         this.TRIES = this.MAX_TRIES;
         throw 'Unknow Tag';
       }
-      console.log('this._command', this._command);
       response = arrayBufferToHex(await nfc.transceive(this._command as string));
-      console.log('response', response);
-      response = arrayBufferToHex(await nfc.transceive('00A00000'));
-      console.log('response', response);
       if (this.isCanceled) return;
       await nfc.close();
       await this.stopScan();
