@@ -30,8 +30,11 @@ export class MobileRawService {
 
   private listenerHandler = async () => {
     try {
-      await nfc.connect('android.nfc.tech.IsoDep', 500);
+      await nfc.connect('android.nfc.tech.IsoDep', 3000);
+      console.log('this._command', this._command as string);
       let response = await nfc.transceive(this._command as string);
+      console.log('response', response);
+      console.log('arrayBufferToHex(response)', arrayBufferToHex(response));
       if (this.isCanceled) return;
       await nfc.close();
       await this.stopScan();
