@@ -12,7 +12,7 @@ export class MobileRawService {
   private _reject: ((reason?: any) => void) | undefined = undefined;
   private isCanceled = false;
 
-  async executeCommand(command?: string): Promise<TagParser> {
+  async executeCommand(command: string = '0000'): Promise<TagParser> {
     return new Promise<TagParser>(async (resolve, reject) => {
       try {
         this._resolve = resolve;
