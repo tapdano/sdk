@@ -1,4 +1,4 @@
-import { arrayBufferToHex, hexStringToArray, hexStringToArrayBuffer } from "../utils/Helper";
+import { arrayBufferToHex, hexStringToArray } from "../utils/Helper";
 import { TagParser } from "../utils/TagParser";
 
 declare const nfc: any;
@@ -25,21 +25,19 @@ export class MobileNFCService {
         this.TRIES = 0;
         this.startScan();
       } catch (error) {
-        console.error('executeCommand error ');
-        console.error(error);
         this.stopScan();
         reject(error);
       }
     });
   }
 
-  private ndefListener = (nfcEvent: any) => {
+  private ndefListener = async (nfcEvent: any) => {
     try {
       if (this.isFirstRead) {
         const message = [
           ndef.record(ndef.TNF_UNKNOWN, [], [], hexStringToArray(this._command as string))
         ];
-        nfc.write(message, () => console.log('NFC write successful'), (err: any) => console.error('NFC write failed', err));
+        await nfc.write(message);
         if (this.isCanceled) return;
         this.isFirstRead = false;
         this.startScan();
@@ -56,8 +54,6 @@ export class MobileNFCService {
       this.stopScan();
       this._resolve && this._resolve(new TagParser(readContent));
     } catch (error) {
-      console.error('ndefListener error');
-      console.error(error);
       if (this.isCanceled) return;
       this.TRIES++;
       if (this.TRIES >= this.MAX_TRIES) {
@@ -70,20 +66,12 @@ export class MobileNFCService {
   private startScan = () => {
     this.stopScan();
     this.ndefListenerCallback = this.ndefListener.bind(this);
-    nfc.addNdefListener(
-      this.ndefListenerCallback,
-      () => console.log('NFC Listener added'),
-      (err: any) => console.error('Failed to add NFC Listener', err)
-    );
+    nfc.addNdefListener(this.ndefListenerCallback);
   };
 
   private stopScan = () => {
     if (this.ndefListenerCallback) {
-      nfc.removeNdefListener(
-        this.ndefListenerCallback,
-        () => console.log('NFC Listener removed'),
-        (err: any) => console.error('Failed to remove NFC Listener', err)
-      );
+      nfc.removeNdefListener(this.ndefListenerCallback);
     }
   };
 
