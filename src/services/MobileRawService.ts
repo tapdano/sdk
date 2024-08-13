@@ -30,15 +30,18 @@ export class MobileRawService {
 
   private listenerHandler = async () => {
     try {
-      await nfc.connect('android.nfc.tech.IsoDep', 3000);
-      console.log('this._command', this._command as string);
-      let response = await nfc.transceive(this._command as string);
-      console.log('response', response);
-      console.log('arrayBufferToHex(response)', arrayBufferToHex(response));
+      await nfc.connect('android.nfc.tech.IsoDep');
+      let response = null;
+      response = await arrayBufferToHex(nfc.transceive('00A404000854617044616E6F0100'));
+      if (response != '9000') {
+        this.TRIES = this.MAX_TRIES;
+        throw 'Unknow Tag';
+      }
+      response = await arrayBufferToHex(nfc.transceive(this._command as string));
       if (this.isCanceled) return;
       await nfc.close();
       await this.stopScan();
-      this._resolve && this._resolve(new TagParser(arrayBufferToHex(response)));
+      this._resolve && this._resolve(new TagParser(response));
     } catch (error) {
       if (this.isCanceled) return;
       this.TRIES++;
