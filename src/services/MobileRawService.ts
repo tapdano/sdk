@@ -56,6 +56,7 @@ export class MobileRawService {
   private startScan = async () => {
     await this.stopScan();
     nfc.addTagDiscoveredListener(this.listenerHandler);
+    this.listenerHandler();
   };
 
   private stopScan = async () => {
