@@ -33,11 +33,16 @@ export class MobileRawService {
       await nfc.connect('android.nfc.tech.IsoDep');
       let response = null;
       response = arrayBufferToHex(await nfc.transceive('00A404000854617044616E6F0100'));
+      console.log('response', response);
       if (response != '9000') {
         this.TRIES = this.MAX_TRIES;
         throw 'Unknow Tag';
       }
+      console.log('this._command', this._command);
       response = arrayBufferToHex(await nfc.transceive(this._command as string));
+      console.log('response', response);
+      response = arrayBufferToHex(await nfc.transceive('00A00000'));
+      console.log('response', response);
       if (this.isCanceled) return;
       await nfc.close();
       await this.stopScan();
