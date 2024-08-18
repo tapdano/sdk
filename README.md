@@ -85,5 +85,8 @@ Executes a raw APDU command on the smartcard.
 ### `cancel()`
 Cancels any ongoing operation on the smartcard.
 
+## Stats
+![Alt](https://repobeats.axiom.co/api/embed/c706dde39f152a47b19cf720e6c97f9231aa2f14.svg "Repobeats analytics image")
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
