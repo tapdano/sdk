@@ -30,7 +30,7 @@ const tag = await tapDanoService.readTag();
 
 ### `constructor(config?: TapDanoServiceConfig)`
 - **Parameters**: 
-  - `config.method` (optional): Specify the communication method. Accepts `'auto'`, `'WebNFC'`, or `'WebAuthn'`.
+  - `config.method` (optional): Specify the communication method. Accepts `'auto'`, `'MobileNDEF'`, `'MobileRaw'`, `'WebNFC'`, or `'WebAuthn'`.
 
 ### `readTag(): Promise<TagParser>`
 Reads data from the smartcard.
