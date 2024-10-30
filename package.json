@@ -1,6 +1,6 @@
 {
   "name": "tapdano",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "TapDano SDK",
   "type": "module",
   "main": "dist/index.js",
