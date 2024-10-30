@@ -3,7 +3,7 @@ import { WebAuthnService } from './WebAuthnService';
 import { MobileNDEFService } from './MobileNDEFService';
 import { MobileRawService } from './MobileRawService';
 import { TagParser } from '../utils/TagParser';
-import { calculatePublicKey, getPlatform, intToHexString } from '../utils/Helper';
+import { calculatePublicKey, calculatePublicKeySecp256k1, getPlatform, intToHexString } from '../utils/Helper';
 
 type CommunicationMethod = 'auto' | 'MobileNDEF' | 'MobileRaw' | 'WebNFC' | 'WebAuthn';
 
@@ -45,15 +45,15 @@ export class TapDanoService {
     return this.NFCService.executeCommand();
   }
 
-  async burnTag(action: 'new' | 'restore', type: 'soulbound' | 'extractable', privateKey?: string): Promise<TagParser> {
+  async burnTag(action: 'new' | 'restore', type: 'soulbound' | 'extractable', privateKey?: string, version?: string): Promise<TagParser> {
     let cmd = '00A10000';
-    cmd += (action == 'new') ? '02' : '66'; //data length
+    cmd += (action == 'new') ? '02' : (version == '02' ? '99' : '66'); //data length
     cmd += (action == 'new') ? '01' : '02'; //action
     if (type == 'soulbound')   cmd += '01';
     if (type == 'extractable') cmd += '02';
     if (action === 'restore') {
       cmd += privateKey;
-      cmd += calculatePublicKey(privateKey as string);
+      cmd += (version == '02' ? calculatePublicKeySecp256k1(privateKey as string) : calculatePublicKey(privateKey as string));
     }
     return this.NFCService.executeCommand(cmd);
   }
