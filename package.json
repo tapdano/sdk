@@ -22,11 +22,13 @@
   "homepage": "https://github.com/tapdano/sdk#readme",
   "license": "MIT",
   "devDependencies": {
+    "@types/elliptic": "^6.4.18",
     "@types/w3c-web-nfc": "^1.0.4",
     "typescript": "^5.5.4"
   },
   "dependencies": {
     "buffer": "^6.0.3",
+    "elliptic": "^6.6.0",
     "tweetnacl": "^1.0.3"
   },
   "types": "dist/index.d.ts"

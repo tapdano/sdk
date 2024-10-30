@@ -1,4 +1,4 @@
-import { calculatePublicKey } from "./Helper";
+import { calculatePublicKey, calculatePublicKeySecp256k1 } from "./Helper";
 
 type TagType = "soulbound" | "extractable";
 
@@ -25,14 +25,23 @@ export class TagParser {
       this.PinLocked = input.slice(14, 16) === "01";
       if (this.Type == "extractable" && !this.ExtractLocked && !this.PinLocked) {
         this.PrivateKey = input.slice(16, 80).toUpperCase();
-        this.PublicKey = calculatePublicKey(this.PrivateKey).toUpperCase();
+        if (this.TagVersion.startsWith('02')) {
+          this.PublicKey = calculatePublicKeySecp256k1(this.PrivateKey).toUpperCase();
+        } else {
+          this.PublicKey = calculatePublicKey(this.PrivateKey).toUpperCase();
+        }
       } else {
-        this.PublicKey = input.slice(16, 80).toUpperCase();
+        let publicKeyLen = ((this.TagVersion.startsWith('02')) ? 65 : 32) * 2;
+        this.PublicKey = input.slice(16, 16 + publicKeyLen).toUpperCase();
       }
-      this.PolicyId = input.slice(80, 136).toUpperCase();
+      let pos = (this.TagVersion.startsWith('02')) ? 146 : 80;
+      let policyIdLen = 28 * 2;
+      this.PolicyId = input.slice(pos, pos + policyIdLen).toUpperCase(); pos =+ policyIdLen;
       if (!this.PinLocked) {
-        this.TwoFactorKey = input.slice(136, 200).toUpperCase();
-        this.LastSignature = input.slice(200, 328).toUpperCase();
+        let twoFactorKeyLen = ((this.TagVersion.startsWith('02')) ? 16 : 32) * 2;
+        this.TwoFactorKey = input.slice(pos, pos + twoFactorKeyLen).toUpperCase(); pos =+ twoFactorKeyLen;
+        let lastSignatureLen = ((this.TagVersion.startsWith('02')) ? 72 : 64) * 2;
+        this.LastSignature = input.slice(pos, pos + lastSignatureLen).toUpperCase();
       }
     }
   }

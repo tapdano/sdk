@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 import nacl from 'tweetnacl';
+import { ec } from 'elliptic';
 
 export function hexStringToArrayBuffer(hex: string): Uint8Array {
   return new Uint8Array(hex.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16)));
@@ -34,4 +35,13 @@ export function calculatePublicKey(privateKey: string): string {
   const privateKeyBytes = hexStringToArrayBuffer(privateKey);
   const keyPair = nacl.sign.keyPair.fromSeed(privateKeyBytes);
   return Buffer.from(keyPair.publicKey).toString('hex');
+}
+
+export function calculatePublicKeySecp256k1(privateKey: string): string {
+  const secp256k1 = new ec('secp256k1');
+  const privateKeyBytes = Buffer.from(privateKey, 'hex');
+  const key = secp256k1.keyFromPrivate(privateKeyBytes);
+  const publicKey = key.getPublic();
+  const publicKeyHex = publicKey.encode('hex', false).toUpperCase();
+  return publicKeyHex;
 }
