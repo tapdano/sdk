@@ -45,12 +45,12 @@ export class WebNFCService {
 
       let readContent: string = '';
       if (event.message.records.length > 0) {
-        const record = event.message.records[0];
-        if (record.recordType === "text") {
-          const textDecoder = new TextDecoder(record.encoding);
-          readContent = textDecoder.decode(record.data);
-        } else if (record.recordType === "unknown") {
-          readContent = record.data?.buffer ? arrayBufferToHex(record.data?.buffer) : '';
+        for (let i = 0; i < event.message.records.length; i++) {
+          const record = event.message.records[i];
+          if (record.recordType === "unknown") {
+            readContent = record.data?.buffer ? arrayBufferToHex(record.data?.buffer) : '';
+            break;
+          }
         }
       }
 
