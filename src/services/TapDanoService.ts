@@ -25,7 +25,7 @@ export class TapDanoService {
           this.method = 'MobileNDEF';
         }
       } else if ('NDEFReader' in window) {
-        this.method = 'WebAuthn';
+        this.method = 'WebNFC';
       } else {
         this.method = 'WebAuthn';
       }
