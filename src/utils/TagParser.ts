@@ -38,7 +38,7 @@ export class TagParser {
       let policyIdLen = 28 * 2;
       this.PolicyId = input.slice(pos, pos + policyIdLen).toUpperCase(); pos = pos + policyIdLen;
       if (!this.PinLocked) {
-        let twoFactorKeyLen = ((this.TagVersion.startsWith('02')) ? 16 : 32) * 2;
+        let twoFactorKeyLen = 32 * 2;
         this.TwoFactorKey = input.slice(pos, pos + twoFactorKeyLen).toUpperCase(); pos = pos + twoFactorKeyLen;
         let lastSignatureLen = ((this.TagVersion.startsWith('02')) ? 72 : 64) * 2;
         this.LastSignature = input.slice(pos, pos + lastSignatureLen).toUpperCase();
