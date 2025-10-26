@@ -38,7 +38,7 @@ export class MobileRawService {
         this.TRIES = this.MAX_TRIES;
         throw 'Unknow Tag';
       }
-      response = arrayBufferToHex(await nfc.transceive(this._command as string));
+      response = arrayBufferToHex(await nfc.transceive(this._command as string)).slice(0, -4);
       if (this.isCanceled) return;
       await nfc.close();
       await this.stopScan();
