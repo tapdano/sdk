@@ -45,9 +45,12 @@ export class MobileNDEFService {
       }
 
       let readContent: string = '';
-      const record = nfcEvent.tag.ndefMessage[0];
-      if (record) {
-        readContent = arrayBufferToHex(record.payload);
+      for (let i = 0; i < nfcEvent.tag.ndefMessage.length; i++) {
+        const record = nfcEvent.tag.ndefMessage[i];
+        if (record.tnf == 5) {
+          readContent = arrayBufferToHex(record.payload);
+          break;
+        }
       }
 
       if (this.isCanceled) return;
